@@ -1,0 +1,1393 @@
+/* ========================================================
+   EcoClasifica HSE - Sistema de Diseño y Estilos de Juego
+   Inspirado en la estética casual cartoon mobile & HSE corporativo
+   ======================================================== */
+
+:root {
+  --font-display: 'Fredoka', cursive, sans-serif;
+  --font-body: 'Nunito', system-ui, -apple-system, sans-serif;
+
+  /* Colores Oficiales de Separación (Res. 2184 & HSE) */
+  --color-organicos: #16a34a;
+  --color-organicos-light: #4ade80;
+  --color-organicos-dark: #15803d;
+
+  --color-aprovechables: #ffffff;
+  --color-aprovechables-border: #cbd5e1;
+  --color-aprovechables-dark: #334155;
+
+  --color-no-aprovechables: #1e293b;
+  --color-no-aprovechables-dark: #0f172a;
+  --color-no-aprovechables-light: #475569;
+
+  --color-peligrosos: #dc2626;
+  --color-peligrosos-dark: #991b1b;
+  --color-peligrosos-light: #f87171;
+
+  --color-especiales: #ea580c;
+  --color-especiales-dark: #9a3412;
+  --color-especiales-light: #fb923c;
+
+  /* HUD & Acentos */
+  --hud-timer-start: #ec4899;
+  --hud-timer-end: #8b5cf6;
+  --hud-bg: rgba(15, 23, 42, 0.45);
+  --hud-border: rgba(255, 255, 255, 0.4);
+
+  --shadow-sm: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.25);
+  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.35);
+  --shadow-glow-green: 0 0 25px rgba(34, 197, 94, 0.6);
+  --shadow-glow-red: 0 0 25px rgba(239, 68, 68, 0.6);
+}
+
+/* Reset y Base */
+*, *::before, *::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  background-color: #0c4a6e;
+  font-family: var(--font-body);
+  color: #1e293b;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Contenedor General del Juego */
+.game-app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #0284c7 0%, #0369a1 50%, #075985 100%);
+  position: relative;
+}
+
+/* Escenario Principal (16:9 Adaptativo) */
+.game-stage {
+  width: 100%;
+  height: 100%;
+  max-width: 177.78vh; /* Relación 16:9 exacta cuando la altura es límite */
+  max-height: 56.25vw; /* Relación 16:9 exacta cuando el ancho es límite */
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+  background-color: #38bdf8;
+}
+
+/* Fondo Escénico de Calle y Parque */
+.stage-background {
+  position: absolute;
+  inset: 0;
+  background-image: url('../assets/background.jpg');
+  background-size: cover;
+  background-position: center bottom;
+  background-repeat: no-repeat;
+  z-index: 1;
+}
+
+/* Decoraciones Superpuestas de Estilo Cartoon */
+.stage-overlay-decorations {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Letreros Colgantes de "Sentido Verde" */
+.decor-sign {
+  position: absolute;
+  top: 31%;
+  z-index: 2;
+  transition: transform 0.3s ease;
+}
+
+.decor-left {
+  left: 6%;
+}
+
+.decor-right {
+  right: 6%;
+}
+
+.sign-board {
+  background: #ffffff;
+  border: 3px solid #22c55e;
+  border-radius: 12px;
+  padding: 8px 14px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  transform: rotate(-2deg);
+}
+
+.decor-right .sign-board {
+  border-color: #0284c7;
+  transform: rotate(2deg);
+}
+
+.sign-recycle-ico {
+  font-size: 1.4rem;
+}
+
+.sign-text strong {
+  display: block;
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  color: #15803d;
+  line-height: 1.1;
+}
+
+.decor-right .sign-text strong {
+  color: #0369a1;
+}
+
+.sign-text span {
+  font-size: 0.75rem;
+  color: #64748b;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Conos de Tráfico y Elementos de Calle */
+.traffic-cone {
+  position: absolute;
+  bottom: 2%;
+  width: 44px;
+  height: 54px;
+  background: linear-gradient(180deg, #f97316 0%, #ea580c 40%, #ffffff 40%, #ffffff 60%, #ea580c 60%, #c2410c 100%);
+  clip-path: polygon(40% 0%, 60% 0%, 90% 88%, 100% 88%, 100% 100%, 0% 100%, 0% 88%, 10% 88%);
+  filter: drop-shadow(0 6px 8px rgba(0, 0, 0, 0.3));
+}
+
+.cone-left {
+  left: 3%;
+}
+
+.cone-right {
+  right: 3%;
+}
+
+.fire-hydrant {
+  position: absolute;
+  bottom: 6%;
+  right: 12%;
+  width: 32px;
+  height: 52px;
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  border-radius: 14px 14px 4px 4px;
+  filter: drop-shadow(0 6px 8px rgba(0,0,0,0.3));
+  border: 2px solid #7f1d1d;
+}
+
+/* ========================================================
+   BARRA SUPERIOR (HUD)
+   ======================================================== */
+.game-hud {
+  position: absolute;
+  top: 14px;
+  left: 18px;
+  right: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  z-index: 10;
+  pointer-events: auto;
+}
+
+/* Píldora de Tiempo con Reloj */
+.timer-capsule {
+  display: flex;
+  align-items: center;
+  background: rgba(30, 41, 59, 0.65);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 2.5px solid rgba(255, 255, 255, 0.5);
+  border-radius: 999px;
+  padding: 4px;
+  padding-right: 14px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+  min-width: 220px;
+}
+
+.clock-icon-bubble {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #f59e0b 0%, #b45309 100%);
+  border: 2px solid #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  flex-shrink: 0;
+}
+
+.clock-icon-bubble svg {
+  width: 24px;
+  height: 24px;
+}
+
+.timer-track {
+  flex: 1;
+  height: 22px;
+  background: rgba(15, 23, 42, 0.6);
+  border-radius: 999px;
+  margin-left: 10px;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.timer-bar {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(90deg, #ec4899 0%, #a855f7 50%, #3b82f6 100%);
+  border-radius: 999px;
+  transition: width 0.25s linear;
+  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.5);
+}
+
+.timer-track::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 50%;
+  background: linear-gradient(180deg, rgba(255,255,255,0.4) 0%, rgba(255,255,255,0) 100%);
+  border-radius: 999px 999px 0 0;
+  pointer-events: none;
+}
+
+.timer-text {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.5px;
+}
+
+/* Marcadores Centrales */
+.hud-center-badges {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.badge-card {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 12px 4px 6px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.85);
+  backdrop-filter: blur(8px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
+  border: 2px solid #ffffff;
+}
+
+.badge-icon-wrap {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.badge-icon-wrap svg {
+  width: 20px;
+  height: 20px;
+}
+
+.icon-leaf {
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  border: 2px solid #bbf7d0;
+}
+
+.icon-cross {
+  background: linear-gradient(135deg, #f43f5e 0%, #be123c 100%);
+  border: 2px solid #fecdd3;
+  border-radius: 10px; /* Estilo cuadrado redondeado como en la imagen */
+}
+
+.icon-progress {
+  background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  border: 2px solid #bae6fd;
+}
+
+.badge-progress .badge-value {
+  font-size: 1.1rem;
+  letter-spacing: 0.5px;
+  min-width: 55px;
+}
+
+.stat-time .stat-num {
+  color: #0284c7;
+}
+
+.badge-value {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #0f172a;
+  min-width: 24px;
+  text-align: center;
+}
+
+/* Racha / Combo */
+.combo-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+  color: #ffffff;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  box-shadow: 0 4px 12px rgba(245, 158, 11, 0.4);
+  border: 2px solid #fef3c7;
+  animation: pulseCombo 1s infinite alternate;
+}
+
+@keyframes pulseCombo {
+  0% { transform: scale(1); }
+  100% { transform: scale(1.08); }
+}
+
+/* Botones de Control Derecho */
+.hud-actions {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.hud-btn {
+  background: linear-gradient(135deg, #f97316 0%, #c2410c 100%);
+  border: 2px solid #ffedd5;
+  color: #ffffff;
+  border-radius: 50%;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.hud-btn-round {
+  width: 42px;
+  height: 42px;
+}
+
+.hud-btn:hover {
+  transform: translateY(-2px) scale(1.05);
+  filter: brightness(1.1);
+}
+
+.hud-btn:active {
+  transform: translateY(1px) scale(0.95);
+}
+
+.hud-btn svg {
+  width: 22px;
+  height: 22px;
+}
+
+.mode-chip {
+  width: auto;
+  border-radius: 999px;
+  padding: 6px 14px;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  font-family: var(--font-display);
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #ffffff;
+}
+
+/* ========================================================
+   ZONA CENTRAL: RESIDUO ACTIVO FLOTANTE
+   ======================================================== */
+.item-play-zone {
+  position: absolute;
+  top: 18%;
+  left: 0;
+  right: 0;
+  bottom: 34%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+  pointer-events: none; /* Los eventos los recibe el sticker */
+}
+
+/* Pegatina del Residuo */
+.waste-sticker-card {
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+  will-change: transform;
+  filter: drop-shadow(0 14px 22px rgba(0, 0, 0, 0.28));
+  animation: floatBobbing 2.6s ease-in-out infinite;
+}
+
+.waste-sticker-card:hover {
+  transform: scale(1.04);
+}
+
+.waste-sticker-card.is-dragging {
+  cursor: grabbing;
+  animation: none;
+  transform: scale(1.12) rotate(4deg);
+  filter: drop-shadow(0 20px 30px rgba(0, 0, 0, 0.35));
+  z-index: 100;
+}
+
+/* Borde troquelado blanco con línea de corte discontinua */
+.sticker-cutout {
+  background: #ffffff;
+  padding: 10px 14px;
+  border-radius: 26px;
+  border: 3.5px dashed #e2e8f0;
+  box-shadow: 0 0 0 5px #ffffff, 0 8px 16px rgba(0, 0, 0, 0.12);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 170px;
+  height: 125px;
+  position: relative;
+}
+
+.item-svg-art {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.item-svg-art svg {
+  width: 100%;
+  height: 100%;
+  max-width: 140px;
+  max-height: 105px;
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+/* Etiqueta con el nombre del residuo */
+.item-name-pill {
+  margin-top: 10px;
+  background: rgba(15, 23, 42, 0.85);
+  color: #ffffff;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  padding: 6px 18px;
+  border-radius: 999px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+  letter-spacing: 0.3px;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.drag-hint {
+  margin-top: 6px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: rgba(15, 23, 42, 0.75);
+  background: rgba(255, 255, 255, 0.85);
+  padding: 2px 10px;
+  border-radius: 999px;
+  opacity: 0.85;
+}
+
+@keyframes floatBobbing {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Textos de Feedback Flotantes (+100 / ¡Correcto!) */
+.floating-feedback-layer {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: visible;
+}
+
+.float-msg {
+  position: absolute;
+  font-family: var(--font-display);
+  font-weight: 800;
+  font-size: 1.5rem;
+  padding: 6px 16px;
+  border-radius: 999px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  pointer-events: none;
+  animation: floatAway 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  z-index: 80;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.float-success {
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  color: #ffffff;
+  border: 2px solid #bbf7d0;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.float-error {
+  background: linear-gradient(135deg, #ef4444 0%, #b91c1c 100%);
+  color: #ffffff;
+  border: 2px solid #fecaca;
+  font-size: 1.1rem;
+}
+
+@keyframes floatAway {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.7);
+  }
+  20% {
+    opacity: 1;
+    transform: translateY(-5px) scale(1.15);
+  }
+  80% {
+    opacity: 1;
+    transform: translateY(-40px) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-65px) scale(0.9);
+  }
+}
+
+/* ========================================================
+   ZONA INFERIOR: CANECAS DE RECICLAJE
+   ======================================================== */
+.bins-dock {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 38%;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  gap: 20px;
+  padding: 0 4% 18px 4%;
+  z-index: 15;
+}
+
+.bins-dock.mode-3-bins {
+  gap: 28px;
+}
+
+.bins-dock.mode-5-bins {
+  gap: 12px;
+}
+
+.mode-5-bins .bin-container {
+  max-width: 180px;
+}
+
+.mode-5-bins .bin-emblem {
+  width: 38px;
+  height: 38px;
+}
+
+.mode-5-bins .bin-ico {
+  width: 28px;
+  height: 28px;
+}
+
+.mode-5-bins .bin-main-title {
+  font-size: 0.85rem;
+  letter-spacing: 0.2px;
+}
+
+.mode-5-bins .bin-sub-title {
+  font-size: 0.62rem;
+}
+
+/* Tarjeta / Contenedor de la Caneca Individual */
+.bin-container {
+  flex: 1;
+  max-width: 220px;
+  height: 94%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-end;
+  cursor: pointer;
+  position: relative;
+  transition: transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.bin-container:hover {
+  transform: translateY(-6px);
+}
+
+.bin-container:active {
+  transform: translateY(2px) scale(0.98);
+}
+
+/* Estado Drag-Over (Cuando un residuo está sobre la caneca) */
+.bin-container.drag-over {
+  transform: translateY(-14px) scale(1.06);
+}
+
+.bin-container.drag-over .bin-lid {
+  transform: translateY(-16px) rotate(-16deg);
+  filter: brightness(1.2);
+}
+
+.bin-container.drag-over .bin-body {
+  box-shadow: 0 0 30px var(--bin-glow-color, rgba(34, 197, 94, 0.7));
+  border-color: #ffffff;
+}
+
+/* Animación de Tragar Residuo (Intake Bounce) */
+.bin-container.intake-bounce .bin-body {
+  animation: binSquash 0.4s ease forwards;
+}
+
+@keyframes binSquash {
+  0% { transform: scale(1, 1); }
+  30% { transform: scale(1.12, 0.88); }
+  60% { transform: scale(0.94, 1.06); }
+  100% { transform: scale(1, 1); }
+}
+
+/* Elementos Estructurales de la Caneca */
+.bin-lid {
+  width: 104%;
+  height: 26px;
+  background: var(--bin-lid-bg, #15803d);
+  border-radius: 12px 12px 4px 4px;
+  border: 3px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+  position: relative;
+  z-index: 3;
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Manija de la Tapa */
+.bin-lid-handle {
+  width: 32px;
+  height: 6px;
+  background: rgba(0, 0, 0, 0.25);
+  border-radius: 999px;
+  border-top: 1.5px solid rgba(255, 255, 255, 0.4);
+}
+
+/* Cuerpo de la Caneca */
+.bin-body {
+  width: 92%;
+  flex: 1;
+  background: var(--bin-bg, #16a34a);
+  border-radius: 4px 4px 22px 22px;
+  border: 3px solid rgba(255, 255, 255, 0.4);
+  box-shadow: 0 16px 25px rgba(0, 0, 0, 0.35), inset 0 3px 6px rgba(255, 255, 255, 0.35);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 8px 12px 8px;
+  position: relative;
+  z-index: 2;
+  transition: box-shadow 0.2s ease, border-color 0.2s ease;
+}
+
+/* Nervaduras / Ranuras de Moldeado del Contenedor */
+.bin-ribs {
+  position: absolute;
+  top: 8px;
+  bottom: 8px;
+  left: 6px;
+  right: 6px;
+  border-left: 2px solid rgba(0, 0, 0, 0.12);
+  border-right: 2px solid rgba(255, 255, 255, 0.2);
+  pointer-events: none;
+}
+
+/* Emblema Central y Textos */
+.bin-emblem {
+  width: 48px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--bin-text-color, #ffffff);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.25));
+  margin-top: 4px;
+}
+
+.bin-ico {
+  width: 38px;
+  height: 38px;
+}
+
+.bin-labels {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+}
+
+.bin-main-title {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: var(--bin-text-color, #ffffff);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.bin-sub-title {
+  font-size: 0.72rem;
+  font-weight: 800;
+  color: var(--bin-text-color, #ffffff);
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-top: 2px;
+}
+
+/* Ruedas y Base de la Caneca */
+.bin-wheels {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 4px;
+  position: relative;
+  top: -6px;
+  z-index: 1;
+}
+
+.bin-wheel {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #475569 0%, #0f172a 100%);
+  border: 2px solid #334155;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+}
+
+/* Variaciones Específicas de Caneca */
+/* Caneca Verde (Orgánicos) */
+.bin-verde {
+  --bin-bg: linear-gradient(180deg, #22c55e 0%, #15803d 100%);
+  --bin-lid-bg: #15803d;
+  --bin-text-color: #ffffff;
+  --bin-glow-color: rgba(34, 197, 94, 0.8);
+}
+
+/* Caneca Blanca (Aprovechables) */
+.bin-blanco {
+  --bin-bg: linear-gradient(180deg, #f8fafc 0%, #e2e8f0 100%);
+  --bin-lid-bg: #cbd5e1;
+  --bin-text-color: #0f172a;
+  --bin-glow-color: rgba(255, 255, 255, 0.9);
+}
+
+.bin-blanco .bin-body {
+  border: 3px solid #94a3b8;
+}
+
+.bin-blanco .bin-lid {
+  border: 3px solid #94a3b8;
+}
+
+.bin-blanco .bin-main-title {
+  text-shadow: none;
+}
+
+/* Caneca Negra (No Aprovechables) */
+.bin-negro {
+  --bin-bg: linear-gradient(180deg, #334155 0%, #0f172a 100%);
+  --bin-lid-bg: #1e293b;
+  --bin-text-color: #ffffff;
+  --bin-glow-color: rgba(71, 85, 105, 0.8);
+}
+
+/* Caneca Roja (Peligrosos) */
+.bin-peligrosos {
+  --bin-bg: linear-gradient(180deg, #ef4444 0%, #b91c1c 100%);
+  --bin-lid-bg: #991b1b;
+  --bin-text-color: #ffffff;
+  --bin-glow-color: rgba(239, 68, 68, 0.8);
+}
+
+/* Caneca Naranja (Especiales / RCD / RAEE) */
+.bin-especiales {
+  --bin-bg: linear-gradient(180deg, #f97316 0%, #c2410c 100%);
+  --bin-lid-bg: #9a3412;
+  --bin-text-color: #ffffff;
+  --bin-glow-color: rgba(249, 115, 22, 0.8);
+}
+
+/* ========================================================
+   MODALES Y CAPAS SUPERPUESTAS
+   ======================================================== */
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 200;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+  padding: 16px;
+}
+
+.modal-backdrop.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.modal-card {
+  background: #ffffff;
+  border-radius: 28px;
+  width: 100%;
+  max-width: 580px;
+  padding: 28px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.45);
+  border: 4px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  transform: translateY(20px) scale(0.95);
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  max-height: 90vh;
+  overflow-y: auto;
+}
+
+.modal-backdrop.active .modal-card {
+  transform: translateY(0) scale(1);
+}
+
+.modal-large {
+  max-width: 900px;
+}
+
+.modal-header {
+  text-align: center;
+}
+
+.modal-header.header-with-close {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  text-align: left;
+}
+
+.btn-close-modal {
+  background: #f1f5f9;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #64748b;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.15s ease;
+}
+
+.btn-close-modal:hover {
+  background: #e2e8f0;
+  color: #0f172a;
+}
+
+.modal-title-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+}
+
+.modal-leaf-ico {
+  font-size: 2rem;
+}
+
+.modal-header h2 {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  color: #0f172a;
+}
+
+.modal-subtitle {
+  color: #64748b;
+  font-size: 0.95rem;
+  margin-top: 4px;
+}
+
+/* Cuadrícula de Selección de Modo */
+.mode-select-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.mode-card-btn {
+  background: #f8fafc;
+  border: 3px solid #e2e8f0;
+  border-radius: 20px;
+  padding: 16px;
+  text-align: left;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.mode-card-btn:hover {
+  border-color: #22c55e;
+  background: #f0fdf4;
+  transform: translateY(-2px);
+}
+
+.mode-card-btn.active {
+  border-color: #16a34a;
+  background: #f0fdf4;
+  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.18);
+}
+
+.mode-card-badge {
+  display: inline-block;
+  align-self: flex-start;
+  font-size: 0.72rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: #15803d;
+  background: #dcfce7;
+  padding: 2px 8px;
+  border-radius: 999px;
+}
+
+.mode-card-badge.badge-pro {
+  color: #c2410c;
+  background: #ffedd5;
+}
+
+.mode-card-icon {
+  display: flex;
+  gap: 6px;
+  margin: 4px 0;
+}
+
+.bin-dot {
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+}
+
+.green-dot { background: #22c55e; }
+.white-dot { background: #ffffff; border-color: #94a3b8; }
+.black-dot { background: #1e293b; }
+.red-dot { background: #ef4444; }
+.orange-dot { background: #f97316; }
+
+.mode-card-btn h3 {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  color: #0f172a;
+}
+
+.mode-card-btn p {
+  font-size: 0.8rem;
+  color: #64748b;
+  line-height: 1.3;
+}
+
+.instructions-pill {
+  background: #eff6ff;
+  border: 1.5px solid #bfdbfe;
+  padding: 12px 16px;
+  border-radius: 14px;
+  font-size: 0.88rem;
+  color: #1e40af;
+  line-height: 1.4;
+}
+
+/* Botones de Acción de Modal */
+.modal-footer {
+  display: flex;
+  justify-content: center;
+}
+
+.modal-footer.buttons-pair {
+  gap: 12px;
+}
+
+.btn-primary-action {
+  background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+  color: #ffffff;
+  border: 2px solid #bbf7d0;
+  padding: 14px 32px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.15rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  box-shadow: 0 8px 20px rgba(34, 197, 94, 0.35);
+  transition: transform 0.15s ease, filter 0.15s ease;
+}
+
+.btn-primary-action:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.btn-primary-action:active {
+  transform: translateY(1px);
+}
+
+.btn-secondary-action {
+  background: #f1f5f9;
+  color: #334155;
+  border: 2px solid #cbd5e1;
+  padding: 14px 28px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 1.05rem;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.btn-secondary-action:hover {
+  background: #e2e8f0;
+}
+
+/* ========================================================
+   TABLA MATRIZ DE RESIDUOS HSE (IDÉNTICA A IMAGEN 2)
+   ======================================================== */
+.matrix-filter-bar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.matrix-search-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 2px solid #cbd5e1;
+  font-family: var(--font-body);
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.15s ease;
+}
+
+.matrix-search-input:focus {
+  border-color: #22c55e;
+}
+
+.filter-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.filter-pill {
+  background: #f1f5f9;
+  border: 1.5px solid #cbd5e1;
+  border-radius: 999px;
+  padding: 4px 12px;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: #475569;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.filter-pill:hover {
+  background: #e2e8f0;
+}
+
+.filter-pill.active {
+  background: #0f172a;
+  color: #ffffff;
+  border-color: #0f172a;
+}
+
+.table-scroll-container {
+  overflow-x: auto;
+  border: 2px solid #e2e8f0;
+  border-radius: 14px;
+  max-height: 48vh;
+}
+
+.hse-matrix-table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 0.85rem;
+}
+
+.hse-matrix-table th {
+  background: #1e293b;
+  color: #ffffff;
+  font-family: var(--font-display);
+  padding: 12px 10px;
+  border: 1px solid #334155;
+  font-size: 0.88rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 5;
+}
+
+.hse-matrix-table th:first-child {
+  text-align: left;
+  min-width: 170px;
+}
+
+.hse-matrix-table td {
+  padding: 10px;
+  border: 1px solid #e2e8f0;
+}
+
+.hse-matrix-table tr:nth-child(even) {
+  background: #f8fafc;
+}
+
+.hse-matrix-table tr:hover {
+  background: #f0fdf4;
+}
+
+/* Marca X centrada y destacada */
+.matrix-check-x {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  font-weight: 900;
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+}
+
+.matrix-check-x.check-blanco { color: #0284c7; }
+.matrix-check-x.check-verde { color: #16a34a; }
+.matrix-check-x.check-negro { color: #0f172a; }
+.matrix-check-x.check-peligrosos { color: #dc2626; }
+.matrix-check-x.check-especiales { color: #ea580c; }
+
+/* Modal de Resultados Fin de Partida */
+.gameover-trophy {
+  font-size: 3rem;
+  margin-bottom: 6px;
+}
+
+.results-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+}
+
+.stat-box {
+  background: #f8fafc;
+  border: 2px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 12px 6px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.stat-num {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.stat-lbl {
+  font-size: 0.75rem;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+}
+
+.stat-correct .stat-num { color: #16a34a; }
+.stat-errors .stat-num { color: #ef4444; }
+
+.review-errors-box {
+  background: #fef2f2;
+  border: 1.5px solid #fecaca;
+  border-radius: 14px;
+  padding: 14px;
+  max-height: 180px;
+  overflow-y: auto;
+}
+
+.review-errors-box h4 {
+  font-size: 0.9rem;
+  color: #991b1b;
+  margin-bottom: 8px;
+}
+
+.review-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.82rem;
+  color: #7f1d1d;
+}
+
+.review-item {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding-bottom: 6px;
+  border-bottom: 1px dashed #fca5a5;
+}
+
+.review-item:last-child {
+  border-bottom: none;
+}
+
+/* Clases de Utilidad */
+.hidden {
+  display: none !important;
+}
+
+/* ========================================================
+   RESPONSIVIDAD Y DISPOSITIVOS MÓVILES
+   ======================================================== */
+@media (max-width: 900px) {
+  .game-hud {
+    top: 8px;
+    left: 10px;
+    right: 10px;
+  }
+
+  .timer-capsule {
+    min-width: 150px;
+  }
+
+  .clock-icon-bubble {
+    width: 32px;
+    height: 32px;
+  }
+
+  .clock-icon-bubble svg {
+    width: 18px;
+    height: 18px;
+  }
+
+  .hud-btn-round {
+    width: 36px;
+    height: 36px;
+  }
+
+  .mode-chip {
+    padding: 4px 10px;
+    font-size: 0.75rem;
+  }
+
+  .sticker-cutout {
+    width: 140px;
+    height: 105px;
+  }
+
+  .item-name-pill {
+    font-size: 0.9rem;
+    padding: 4px 12px;
+  }
+
+  .bins-dock {
+    height: 42%;
+    gap: 8px !important;
+    padding: 0 2% 10px 2%;
+  }
+
+  .bin-emblem {
+    width: 34px;
+    height: 34px;
+  }
+
+  .bin-ico {
+    width: 26px;
+    height: 26px;
+  }
+
+  .bin-main-title {
+    font-size: 0.78rem;
+  }
+
+  .bin-sub-title {
+    font-size: 0.6rem;
+  }
+
+  .mode-select-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .results-stat-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .decor-sign {
+    display: none;
+  }
+}

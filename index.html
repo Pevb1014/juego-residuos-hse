@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>EcoClasifica HSE - Juego de Clasificación de Residuos</title>
+  <meta name="description" content="Juego interactivo de clasificación de residuos según el código de colores y matriz HSE.">
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <!-- Estilos -->
+  <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+  <!-- Contenedor Principal del Juego -->
+  <div id="gameApp" class="game-app">
+    
+    <!-- Escenario Principal (16:9 Adaptativo) -->
+    <main id="gameStage" class="game-stage" role="main">
+      
+      <!-- Fondo Escénico -->
+      <div class="stage-background" id="stageBackground"></div>
+
+      <!-- Decoraciones Escénicas Superpuestas -->
+      <div class="stage-overlay-decorations">
+        <!-- Conos de tráfico y elementos de calle -->
+        <div class="traffic-cone cone-left" aria-hidden="true"></div>
+        <div class="traffic-cone cone-right" aria-hidden="true"></div>
+        <div class="fire-hydrant" aria-hidden="true"></div>
+      </div>
+
+      <!-- Barra Superior HUD -->
+      <header id="gameHud" class="game-hud">
+        
+        <!-- Barra de Tiempo (Píldora con Gradiente y Reloj) -->
+        <div class="hud-item timer-capsule" title="Tiempo empleado y límite">
+          <div class="clock-icon-bubble">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <circle cx="12" cy="12" r="9"/>
+              <polyline points="12 6 12 12 16 14"/>
+            </svg>
+          </div>
+          <div class="timer-track">
+            <div id="timerBar" class="timer-bar" style="width: 100%;"></div>
+            <span id="timerText" class="timer-text">00:00 / 03:00</span>
+          </div>
+        </div>
+
+        <!-- Marcadores Centrales -->
+        <div class="hud-center-badges">
+          
+          <!-- Contador de Progreso (ej: 1 de 17) -->
+          <div class="badge-card badge-progress" title="Progreso de residuos clasificados">
+            <div class="badge-icon-wrap icon-progress">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+                <rect x="3" y="4" width="18" height="16" rx="3"/>
+                <path d="m9 12 2 2 4-4"/>
+              </svg>
+            </div>
+            <span id="progressText" class="badge-value">0 / 17</span>
+          </div>
+
+          <!-- Contador Aciertos (Medalla Verde con Hoja) -->
+          <div class="badge-card badge-success" title="Aciertos">
+            <div class="badge-icon-wrap icon-leaf">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <polyline points="20 6 9 17 4 12"/>
+              </svg>
+            </div>
+            <span id="scoreSuccess" class="badge-value">0</span>
+          </div>
+
+          <!-- Contador Errores (Caja Rosa con Cruz) -->
+          <div class="badge-card badge-error" title="Errores">
+            <div class="badge-icon-wrap icon-cross">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+                <line x1="18" y1="6" x2="6" y2="18"/>
+                <line x1="6" y1="6" x2="18" y2="18"/>
+              </svg>
+            </div>
+            <span id="scoreError" class="badge-value">0</span>
+          </div>
+
+          <!-- Racha / Combo -->
+          <div id="comboBadge" class="combo-badge hidden">
+            <span class="combo-flame">🔥</span>
+            <span id="comboText" class="combo-text">x2</span>
+          </div>
+        </div>
+
+        <!-- Botones de Control Derecho -->
+        <div class="hud-actions">
+          
+          <!-- Selector Rápido de Modo -->
+          <button id="btnSwitchMode" class="hud-btn mode-chip" title="Cambiar Modo (3 Canecas / 5 Canecas HSE)">
+            <span id="modeChipLabel">3 Canecas</span>
+          </button>
+
+          <!-- Matriz / Guía HSE -->
+          <button id="btnOpenMatrix" class="hud-btn hud-btn-round" title="Ver Matriz de Residuos HSE" aria-label="Abrir Matriz de Residuos">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5">
+              <path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/>
+              <path d="M6 6h10M6 10h10M6 14h6"/>
+            </svg>
+          </button>
+
+          <!-- Control de Sonido -->
+          <button id="btnToggleAudio" class="hud-btn hud-btn-round btn-sound" title="Activar/Silenciar sonido" aria-label="Silenciar sonido">
+            <svg id="soundOnIco" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"/>
+            </svg>
+            <svg id="soundOffIco" viewBox="0 0 24 24" fill="currentColor" class="hidden">
+              <path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27l4.73 4.73H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"/>
+            </svg>
+          </button>
+
+          <!-- Pausa / Reinicio -->
+          <button id="btnPauseGame" class="hud-btn hud-btn-round" title="Pausar o Reiniciar" aria-label="Pausa">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <rect x="6" y="4" width="4" height="16" rx="1"/>
+              <rect x="14" y="4" width="4" height="16" rx="1"/>
+            </svg>
+          </button>
+
+        </div>
+      </header>
+
+      <!-- Zona Central: Residuo Flotante Activo -->
+      <section id="itemDropZone" class="item-play-zone" aria-label="Zona de juego del residuo">
+        
+        <!-- Elemento Arrastrable / Pegatina del Residuo -->
+        <div id="activeWasteItem" class="waste-sticker-card" draggable="false">
+          <!-- Borde troquelado blanco con sombra -->
+          <div class="sticker-cutout">
+            <div id="itemSvgContainer" class="item-svg-art">
+              <!-- El SVG del residuo se inyecta dinámicamente -->
+            </div>
+          </div>
+          <!-- Etiqueta con el nombre del residuo -->
+          <div id="itemNameLabel" class="item-name-pill">
+            Rollo de aluminio
+          </div>
+          <!-- Indicador táctil / arrastre -->
+          <div class="drag-hint">
+            <span>Arrastra a la caneca correcta o tócala</span>
+          </div>
+        </div>
+
+        <!-- Contenedor de Textos Flotantes (Puntajes / Errores) -->
+        <div id="floatingFeedbackLayer" class="floating-feedback-layer"></div>
+
+      </section>
+
+      <!-- Zona Inferior: Las Canecas de Clasificación -->
+      <footer id="binsDock" class="bins-dock mode-3-bins" aria-label="Canecas de separación">
+        <!-- Canecas generadas dinámicamente según modo (3 o 5 canecas) -->
+      </footer>
+
+    </main>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: BIENVENIDA Y SELECCIÓN DE MODO                   -->
+    <!-- ======================================================== -->
+    <div id="modalWelcome" class="modal-backdrop active" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="modal-title-wrap">
+            <span class="modal-leaf-ico">♻️</span>
+            <h2>¡Clasificación de Residuos HSE!</h2>
+          </div>
+          <p class="modal-subtitle">Demuestra tu destreza ambiental clasificando todos los residuos de la matriz.</p>
+        </div>
+
+        <div class="mode-select-grid">
+          
+          <!-- Opción 1: Modo Estándar (3 Canecas) -->
+          <button class="mode-card-btn active" data-mode="standard">
+            <div class="mode-card-badge">3 Canecas (Estándar)</div>
+            <div class="mode-card-icon">
+              <span class="bin-dot green-dot"></span>
+              <span class="bin-dot white-dot"></span>
+              <span class="bin-dot black-dot"></span>
+            </div>
+            <h3>Punto Ecológico (3 Canecas)</h3>
+            <p><strong>17 residuos del día a día</strong></p>
+            <p>⏱ <strong>Tiempo límite: 3 minutos</strong></p>
+            <p style="font-size:0.75rem; color:#64748b;">Resolución 2184: Verde (Orgánicos), Blanco (Aprovechables) y Negro (No aprovechables).</p>
+          </button>
+
+          <!-- Opción 2: Modo Integral HSE (5 Canecas) -->
+          <button class="mode-card-btn" data-mode="hse">
+            <div class="mode-card-badge badge-pro">5 Canecas (Integral HSE)</div>
+            <div class="mode-card-icon">
+              <span class="bin-dot green-dot"></span>
+              <span class="bin-dot white-dot"></span>
+              <span class="bin-dot black-dot"></span>
+              <span class="bin-dot red-dot"></span>
+              <span class="bin-dot orange-dot"></span>
+            </div>
+            <h3>Gestión Integral HSE (5 Canecas)</h3>
+            <p><strong>25 residuos de la matriz completa</strong></p>
+            <p>⏱ <strong>Tiempo límite: 5 minutos</strong></p>
+            <p style="font-size:0.75rem; color:#64748b;">Añade Peligrosos (Roja: pilas, pintura, toner) y Especiales (Naranja: RCD, madera, RAEE).</p>
+          </button>
+
+        </div>
+
+        <div class="instructions-pill">
+          🎯 <strong>Misión:</strong> Clasifica <strong>todos los residuos del juego</strong>. El reto es lograr el 100% de aciertos en el menor tiempo posible antes de que expire el límite. ¡Puedes arrastrar el residuo o simplemente pulsar la caneca correcta!
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnStartGame" class="btn-primary-action">
+            <span>¡Comenzar Clasificación!</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <polygon points="5 3 19 12 5 21 5 3"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: MATRIZ DE RESIDUOS HSE (IDÉNTICA A IMAGEN 2)      -->
+    <!-- ======================================================== -->
+    <div id="modalMatrix" class="modal-backdrop" role="dialog" aria-modal="true">
+      <div class="modal-card modal-large">
+        <div class="modal-header header-with-close">
+          <div>
+            <h2>📋 Matriz Oficial de Clasificación de Residuos HSE</h2>
+            <p class="modal-subtitle">Basada en la directriz corporativa y código de colores ambiental.</p>
+          </div>
+          <button id="btnCloseMatrix" class="btn-close-modal" aria-label="Cerrar modal">✕</button>
+        </div>
+
+        <!-- Buscador y Filtro -->
+        <div class="matrix-filter-bar">
+          <input type="text" id="matrixSearchInput" placeholder="🔍 Buscar residuo (ej. aluminio, pilas, tapabocas, cartón)..." class="matrix-search-input">
+          <div class="filter-pills" id="matrixFilterPills">
+            <button class="filter-pill active" data-filter="all">Todos</button>
+            <button class="filter-pill" data-filter="blanco">Aprovechables (Blanco)</button>
+            <button class="filter-pill" data-filter="verde">Orgánicos (Verde)</button>
+            <button class="filter-pill" data-filter="negro">No Aprovechables (Negro)</button>
+            <button class="filter-pill" data-filter="peligrosos">Peligrosos (Rojo)</button>
+            <button class="filter-pill" data-filter="especiales">Especiales (Naranja)</button>
+          </div>
+        </div>
+
+        <!-- Tabla Estructurada Idéntica a la Imagen 2 -->
+        <div class="table-scroll-container">
+          <table class="hse-matrix-table" id="matrixTable">
+            <thead>
+              <tr>
+                <th>Residuo Identificado</th>
+                <th class="col-negro">No aprovechables</th>
+                <th class="col-blanco">Residuos Aprovechables</th>
+                <th class="col-verde">Orgánicos Aprovechables</th>
+                <th class="col-peligrosos">Peligrosos</th>
+                <th class="col-especiales">Especiales</th>
+                <th>Consejo HSE / Disposición</th>
+              </tr>
+            </thead>
+            <tbody id="matrixTableBody">
+              <!-- Inyectado dinámicamente -->
+            </tbody>
+          </table>
+        </div>
+
+        <div class="modal-footer">
+          <button id="btnReturnToGame" class="btn-secondary-action">Volver al Juego</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================================================== -->
+    <!-- MODAL: FIN DE PARTIDA & RESULTADOS                       -->
+    <!-- ======================================================== -->
+    <div id="modalGameOver" class="modal-backdrop" role="dialog" aria-modal="true">
+      <div class="modal-card">
+        <div class="modal-header">
+          <div class="gameover-trophy">🏆</div>
+          <h2 id="gameOverTitle">¡Clasificación Completada!</h2>
+          <p id="gameOverSubtitle" class="modal-subtitle">Has clasificado todos los residuos de la matriz.</p>
+        </div>
+
+        <div class="results-stat-grid">
+          <div class="stat-box stat-time">
+            <span class="stat-num" id="statFinalTime">00:00</span>
+            <span class="stat-lbl">Tiempo Empleado</span>
+          </div>
+          <div class="stat-box stat-score">
+            <span class="stat-num" id="statFinalScore">0</span>
+            <span class="stat-lbl">Puntos Totales</span>
+          </div>
+          <div class="stat-box stat-correct">
+            <span class="stat-num" id="statFinalCorrect">0 / 0</span>
+            <span class="stat-lbl">Aciertos</span>
+          </div>
+          <div class="stat-box stat-accuracy">
+            <span class="stat-num" id="statFinalAccuracy">100%</span>
+            <span class="stat-lbl">Precisión</span>
+          </div>
+        </div>
+
+        <!-- Revisión de errores cometidos -->
+        <div id="reviewErrorsSection" class="review-errors-box hidden">
+          <h4>💡 Repaso de Errores para Aprender:</h4>
+          <ul id="reviewErrorsList" class="review-list"></ul>
+        </div>
+
+        <div class="modal-footer buttons-pair">
+          <button id="btnPlayAgain" class="btn-primary-action">
+            <span>Jugar de Nuevo</span>
+            <svg viewBox="0 0 24 24" fill="currentColor" width="20" height="20">
+              <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.77 20 14.44 20 13c0-4.42-3.58-8-8-8zm-6 8c0-1.01.25-1.97.7-2.8L5.24 8.74C4.46 10.23 4 11.56 4 13c0 4.42 3.58 8 8 8v4l5-5-5-5v4c-3.31 0-6-2.69-6-6z"/>
+            </svg>
+          </button>
+          <button id="btnChangeModeFromEnd" class="btn-secondary-action">Cambiar Modo</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Scripts -->
+  <script src="js/audio.js"></script>
+  <script src="js/items-data.js"></script>
+  <script src="js/game.js"></script>
+</body>
+</html>
