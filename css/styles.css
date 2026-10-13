@@ -73,16 +73,29 @@ html, body {
   position: relative;
 }
 
-/* Escenario Principal (16:9 Adaptativo) */
+/* Escenario Principal (16:9 Adaptativo en Escritorio, 100% Pantalla en Móvil) */
 .game-stage {
   width: 100%;
   height: 100%;
-  max-width: 177.78vh; /* Relación 16:9 exacta cuando la altura es límite */
+  max-width: 177.78vh; /* Relación 16:9 exacta cuando la altura es límite en pantallas panorámicas */
   max-height: 56.25vw; /* Relación 16:9 exacta cuando el ancho es límite */
   position: relative;
   overflow: hidden;
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
   background-color: #38bdf8;
+}
+
+/* En móviles y pantallas verticales: Ocupa toda la pantalla del teléfono sin bandas negras */
+@media (max-width: 850px), (max-aspect-ratio: 16/10) {
+  .game-stage {
+    max-width: 100vw;
+    max-height: 100dvh;
+    height: 100dvh;
+    height: 100vh;
+    width: 100vw;
+    box-shadow: none;
+    border-radius: 0;
+  }
 }
 
 /* Fondo Escénico de Calle y Parque */
@@ -1312,82 +1325,363 @@ html, body {
 }
 
 /* ========================================================
-   RESPONSIVIDAD Y DISPOSITIVOS MÓVILES
+   RESPONSIVIDAD Y DISPOSITIVOS MÓVILES (SMARTPHONES & TABLETS)
    ======================================================== */
-@media (max-width: 900px) {
+@media (max-width: 768px) {
+  /* Escenario ocupa toda la pantalla del celular sin desbordes */
+  .game-app {
+    width: 100vw;
+    height: 100dvh;
+    height: 100vh;
+  }
+
+  .game-stage {
+    width: 100vw;
+    height: 100dvh;
+    height: 100vh;
+    max-width: 100vw;
+    max-height: 100dvh;
+    box-shadow: none;
+  }
+
+  /* HUD en Móvil: Adaptativo y Compacto */
   .game-hud {
-    top: 8px;
-    left: 10px;
-    right: 10px;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    gap: 6px;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .timer-capsule {
-    min-width: 150px;
+    min-width: 110px;
+    padding: 2px 6px 2px 2px;
   }
 
   .clock-icon-bubble {
-    width: 32px;
-    height: 32px;
-  }
-
-  .clock-icon-bubble svg {
-    width: 18px;
-    height: 18px;
-  }
-
-  .hud-btn-round {
-    width: 36px;
-    height: 36px;
-  }
-
-  .mode-chip {
-    padding: 4px 10px;
-    font-size: 0.75rem;
-  }
-
-  .sticker-cutout {
-    width: 140px;
-    height: 105px;
-  }
-
-  .item-name-pill {
-    font-size: 0.9rem;
-    padding: 4px 12px;
-  }
-
-  .bins-dock {
-    height: 42%;
-    gap: 8px !important;
-    padding: 0 2% 10px 2%;
-  }
-
-  .bin-emblem {
-    width: 34px;
-    height: 34px;
-  }
-
-  .bin-ico {
     width: 26px;
     height: 26px;
   }
 
-  .bin-main-title {
+  .clock-icon-bubble svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .timer-track {
+    height: 18px;
+    margin-left: 6px;
+  }
+
+  .timer-text {
+    font-size: 0.68rem;
+    font-weight: 800;
+  }
+
+  .hud-center-badges {
+    gap: 4px;
+  }
+
+  .badge-card {
+    padding: 2px 6px 2px 4px;
+    gap: 4px;
+  }
+
+  .badge-icon-wrap {
+    width: 24px;
+    height: 24px;
+  }
+
+  .badge-icon-wrap svg {
+    width: 14px;
+    height: 14px;
+  }
+
+  .badge-value {
+    font-size: 0.95rem;
+    min-width: 16px;
+  }
+
+  .badge-progress .badge-value {
+    font-size: 0.8rem;
+    min-width: 40px;
+  }
+
+  .combo-badge {
+    padding: 2px 6px;
+    font-size: 0.75rem;
+  }
+
+  .hud-actions {
+    gap: 4px;
+  }
+
+  .hud-btn-round {
+    width: 30px;
+    height: 30px;
+  }
+
+  .hud-btn-round svg {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mode-chip {
+    padding: 2px 6px;
+    font-size: 0.65rem;
+  }
+
+  /* Zona del Residuo en Pantalla Móvil */
+  .item-play-zone {
+    top: 13%;
+    bottom: 39%;
+  }
+
+  .sticker-cutout {
+    width: 125px;
+    height: 90px;
+    padding: 6px 8px;
+    border-radius: 18px;
+  }
+
+  .item-name-pill {
+    margin-top: 6px;
+    font-size: 0.85rem;
+    padding: 4px 12px;
+  }
+
+  .drag-hint {
+    font-size: 0.65rem;
+    padding: 2px 8px;
+    margin-top: 3px;
+  }
+
+  /* Muelle de Canecas Inferior en Móvil */
+  .bins-dock {
+    height: 39%;
+    padding: 0 4px 6px 4px;
+  }
+
+  /* Canecas en Modo Estándar (3 Canecas) */
+  .bins-dock.mode-3-bins {
+    gap: 6px;
+  }
+
+  .mode-3-bins .bin-container {
+    max-width: 130px;
+  }
+
+  .mode-3-bins .bin-main-title {
     font-size: 0.78rem;
   }
 
-  .bin-sub-title {
-    font-size: 0.6rem;
+  .mode-3-bins .bin-sub-title {
+    font-size: 0.58rem;
+  }
+
+  /* Canecas en Modo Integral HSE (5 Canecas en Pantalla Móvil) */
+  .bins-dock.mode-5-bins {
+    gap: 3px;
+    padding: 0 2px 4px 2px;
+  }
+
+  .mode-5-bins .bin-container {
+    flex: 1;
+    min-width: 0;
+    max-width: none;
+  }
+
+  .mode-5-bins .bin-lid {
+    height: 18px;
+    border-width: 2px;
+  }
+
+  .mode-5-bins .bin-lid-handle {
+    width: 16px;
+    height: 4px;
+  }
+
+  .mode-5-bins .bin-body {
+    border-width: 2px;
+    padding: 5px 1px 5px 1px;
+    border-radius: 3px 3px 12px 12px;
+  }
+
+  .mode-5-bins .bin-emblem {
+    width: 24px;
+    height: 24px;
+    margin-top: 1px;
+  }
+
+  .mode-5-bins .bin-ico {
+    width: 18px;
+    height: 18px;
+  }
+
+  .mode-5-bins .bin-main-title {
+    font-size: 0.54rem;
+    letter-spacing: 0px;
+    line-height: 1.05;
+    word-break: break-word;
+  }
+
+  .mode-5-bins .bin-sub-title {
+    display: none; /* Se oculta subtítulo en 5 canecas móvil para dar máxima legibilidad al título */
+  }
+
+  .mode-5-bins .bin-wheel {
+    width: 13px;
+    height: 13px;
+  }
+
+  .mode-5-bins .bin-wheels {
+    top: -3px;
+  }
+
+  /* Decoraciones en Móvil */
+  .traffic-cone {
+    width: 24px;
+    height: 32px;
+  }
+
+  .fire-hydrant {
+    width: 18px;
+    height: 30px;
+    right: 4%;
+  }
+
+  /* Modales en Móvil */
+  .modal-card {
+    padding: 16px 12px;
+    border-radius: 18px;
+    max-height: 94vh;
+    gap: 12px;
+  }
+
+  .modal-header h2 {
+    font-size: 1.25rem;
+  }
+
+  .modal-subtitle {
+    font-size: 0.8rem;
   }
 
   .mode-select-grid {
     grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .mode-card-btn {
+    padding: 10px;
+  }
+
+  .mode-card-btn h3 {
+    font-size: 0.95rem;
+  }
+
+  .instructions-pill {
+    padding: 8px 10px;
+    font-size: 0.75rem;
+  }
+
+  .btn-primary-action {
+    padding: 10px 20px;
+    font-size: 0.95rem;
   }
 
   .results-stat-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 6px;
   }
 
-  .decor-sign {
+  .stat-box {
+    padding: 8px 4px;
+  }
+
+  .stat-num {
+    font-size: 1.2rem;
+  }
+
+  .stat-lbl {
+    font-size: 0.65rem;
+  }
+}
+
+/* Pantallas Ultra Estrechas (Menores a 380px) */
+@media (max-width: 380px) {
+  .mode-5-bins .bin-main-title {
+    font-size: 0.48rem;
+  }
+
+  .mode-5-bins .bin-emblem {
+    width: 20px;
+    height: 20px;
+  }
+
+  .mode-5-bins .bin-ico {
+    width: 15px;
+    height: 15px;
+  }
+
+  .sticker-cutout {
+    width: 110px;
+    height: 80px;
+  }
+
+  .item-name-pill {
+    font-size: 0.78rem;
+  }
+}
+
+/* Teléfonos en Orientación Horizontal (Landscape Móvil) */
+@media (max-height: 500px) and (orientation: landscape) {
+  .game-hud {
+    top: 4px;
+    left: 8px;
+    right: 8px;
+  }
+
+  .item-play-zone {
+    top: 10%;
+    bottom: 40%;
+  }
+
+  .sticker-cutout {
+    width: 100px;
+    height: 70px;
+  }
+
+  .item-name-pill {
+    font-size: 0.78rem;
+    padding: 2px 10px;
+    margin-top: 3px;
+  }
+
+  .drag-hint {
     display: none;
+  }
+
+  .bins-dock {
+    height: 44%;
+    padding-bottom: 4px;
+  }
+
+  .bin-emblem {
+    width: 26px;
+    height: 26px;
+  }
+
+  .bin-ico {
+    width: 18px;
+    height: 18px;
+  }
+
+  .bin-main-title {
+    font-size: 0.7rem;
+  }
+
+  .bin-sub-title {
+    font-size: 0.52rem;
   }
 }
