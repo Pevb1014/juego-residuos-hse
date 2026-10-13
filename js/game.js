@@ -44,9 +44,21 @@ class WasteSortingGame {
   init() {
     this.cacheDom();
     this.bindEvents();
+
+    // Soporte para parámetros de URL (pruebas visuales y acceso directo)
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('mode')) {
+      this.currentMode = urlParams.get('mode');
+    }
+
     this.updateModeUI();
     this.renderBins();
     this.populateHseMatrix();
+
+    if (urlParams.has('autostart')) {
+      this.dom.modalWelcome.classList.remove('active');
+      this.startGame();
+    }
   }
 
   cacheDom() {
@@ -185,7 +197,10 @@ class WasteSortingGame {
 
   updateModeUI() {
     const isStandard = (this.currentMode === 'standard');
-    this.dom.modeChipLabel.textContent = isStandard ? "3 Canecas (Estándar)" : "5 Canecas (Integral HSE)";
+    this.dom.modeChipLabel.innerHTML = `
+      <span class="mode-text-full">${isStandard ? '3 Canecas (Estándar)' : '5 Canecas (Integral HSE)'}</span>
+      <span class="mode-text-short">${isStandard ? '3 Can.' : '5 Can.'}</span>
+    `;
     this.dom.binsDock.className = `bins-dock ${isStandard ? 'mode-3-bins' : 'mode-5-bins'}`;
   }
 
